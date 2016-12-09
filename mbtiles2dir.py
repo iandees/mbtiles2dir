@@ -22,6 +22,8 @@ def main():
                         help='the input mbtiles file')
     parser.add_argument('prefix',
                         help='prefix directory name to write tiles to')
+    parser.add_argument('--flipy', action='store_true',
+                        help='output tiles with the Y value "flipped"')
 
     args = parser.parse_args()
 
@@ -41,6 +43,8 @@ def main():
     count = 0
     for (z, x, y, data) in c:
         dir_path = "{}/{}/{}".format(args.prefix, z, x)
+        if args.flipy:
+            y = (2**z-1) - y
         filename = "{}.{}".format(y, fmt)
         mkdir_p(dir_path)
         with open(os.path.join(dir_path, filename), 'wb') as f:
